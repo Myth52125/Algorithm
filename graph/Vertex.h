@@ -3,6 +3,7 @@
 
 #include <string>
 #include <memory>
+#include <iostream>
 using namespace std;
 
 class Vertex
@@ -10,13 +11,11 @@ class Vertex
 public:
     
     explicit Vertex(int key, string value = "")
-        :_key(key),_value(value)
+        :_key(key),_value(value),_next()
         {
-            printf("Vertex cst \n");
         }
     ~Vertex()
     {
-        printf("Vertex des \n");        
     }
 private:
     int _key;
@@ -30,16 +29,31 @@ public:
     }
     int key()
     {
-        return _key;
+        return _key;  
     }
     string value()
     {
         return _value;
     }
-    void next(std::shared_ptr<Vertex>  v)
+
+    void next(std::shared_ptr<Vertex>  &v)
     {
-        _next = v;
+        
+
+        if(_next.lock())
+        {
+            std::weak_ptr<Vertex> tmp(_next);
+
+            while(tmp.lock())
+            {
+                tmp = tmp.lock()->next();
+            }
+            tmp = v;
+        }else{
+            _next = v;
+        }
     }
+    
 };
 
 

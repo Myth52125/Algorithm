@@ -13,15 +13,16 @@ public:
     typedef std::map<int ,shared_ptr<Vertex>> VertexList;
     
     Graph();
-
+    Graph(std::vector<std::vector<int>> &);    
+    ~Graph();
 private:
     VertexList _list;
     
-    void addVertex(std::shared_ptr<Vertex> start,std::shared_ptr<Vertex> end);
+    void addVertex(std::shared_ptr<Vertex> &start,
+        std::shared_ptr<Vertex> &end);
 public:
-    void addEdge(const Edge& e);
-    
-
+    void addEdge(Edge& e);
+    size_t size()  const;
 };
 
 

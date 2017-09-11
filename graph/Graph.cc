@@ -3,29 +3,47 @@
 #include <stdio.h>
 
 Graph::Graph()
-    {
-        printf("Graph cst \n");
-        
-    }
-
-
-void Graph::addEdge(const Edge& e)
 {
-    if(e->start().lock() && e->end().lock())
+}
+Graph::~Graph()
+{
+}
+
+Graph(std::vector<std::vector<int> > &p)
+{
+    int len = pair.size();
+    for(int i = 0;i<len;i++)
     {
-        addEdge(e->start().lock(),e->end().lock())
+        Edge e(new Vertex(pair[i][0]),new Vertex(pair[i][1]));
+        addEdge(e);
     }
 }
 
-void Graph::addVertex(Vsp start,Vsp end)
+
+
+void Graph::addEdge(Edge& e)
 {
-        Vsp vspTmp(start);
-        Vsp tmp = _next[start->key()];
-        if(tmp = NULL)
+    addVertex(e.start(),e.end());
+}
+
+void Graph::addVertex(std::shared_ptr<Vertex> &start,
+    std::shared_ptr<Vertex> &end)
+{
+    
+    std::shared_ptr<Vertex> vspTmp(start);
+    std::shared_ptr<Vertex> tmp = _list[start->key()];
+        if(tmp == NULL)
         {
-            vspTmp->next(v);
-            _next[start->key()]=vspTmp;            
+            vspTmp->next(vspTmp);
+            _list[start->key()]=end;            
+        }else{
+            _list[start->key()]->next(end);
         }
-
-
 }
+
+
+size_t  Graph::size() const
+{
+    return _list.size();
+}
+

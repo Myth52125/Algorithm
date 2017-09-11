@@ -12,11 +12,9 @@ public:
         :_v1(v1),_v2(v2),
         _weight(weight),_direction(direction)
         {
-            printf("Edge cst \n");
         }
     ~Edge()
     {
-        printf("Edge des \n");
     }
 private:
     std::shared_ptr<Vertex> _v1;
