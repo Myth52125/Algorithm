@@ -3,27 +3,29 @@
 
 #include <vector>
 #include "Vertex.h"
-#include "Graph.h"
-#include "Edge.h"
+//#include "Graph.h"
+//#include "Edge.h"
 #include <map>
+#include <vector>
+#include <memory>
+
 class Graph
 {
 public:
-    typedef std::map<int ,shared_ptr<Vertex>> VertexList;
+    typedef Vertex V;
+    typedef std::map<int,std::shared_ptr<Vertex>> Vcontainer;
     typedef std::shared_ptr<Vertex> Vsp;
-    typedef std::weak_ptr<Vertex> Vwp;
-    
     Graph();
-    Graph(vector<vector<int>> &);    
+    Graph(std::vector<std::vector<int>> &);    
     ~Graph();
 private:
-    VertexList _list;
-    
-    void addVertex(Vsp &start,Vsp &end);
+    Vcontainer _vs;
+    void addVertex(V &start,V &end);
 public:
-    void addEdge(Edge& e);
+    void addEdge(V *vstart,V* vend);
     size_t size()  const;
-    
+    void addVertex(Vsp &v);
+    void print();
 };
 
 

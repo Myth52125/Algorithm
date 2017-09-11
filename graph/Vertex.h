@@ -1,65 +1,27 @@
 #ifndef _VERTEX_H_M_
 #define _VERTEX_H_M_
 
-#include <string>
 #include <memory>
-#include <iostream>
-using namespace std;
+#include <stdio.h>
+#include <map>
 
 class Vertex
 {
 public:
-    typedef std::shared_ptr<Vertex> Vsp;
-    typedef std::weak_ptr<Vertex> Vwp;
-    
-    explicit Vertex(int key, string value = "")
-        :_key(key),_value(value),_next()
-        {
-        }
-    ~Vertex()
-    {
-    }
+    typedef std::map<int,int> Vrelation;
+    Vertex(int key);
 private:
     int _key;
-    string _value;
-    Vwp _next;
+    Vrelation _relationList;
     
 public:
-    Vwp &next()
-    {
-        return _next;
-    }
-    int key()
-    {
-        return _key;  
-    }
-    string value()
-    {
-        return _value;
-    }
+    void addRelation(int key,int w=1);
+    int key();
+    int relation(size_t index);
+    void print();
 
-    void next(Vsp  &v)
-    {
-        if(_next.lock())
-        {
-            Vwp tmp(_next);
-            while(tmp.lock())
-            {
-                if(tmp.lock()->key() != v->key())
-                {
-                    tmp = tmp.lock()->next();
-                }else{
-                    return;
-                }
-            }
-            tmp = v;
-        }else{
-            _next = v;
-        }
-    }
-
-    
 };
+
 
 
 

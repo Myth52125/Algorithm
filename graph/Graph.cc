@@ -1,49 +1,49 @@
 #include "Graph.h"
 #include <algorithm>
 #include <stdio.h>
-
+#include <iterator>
+typedef std::shared_ptr<Vertex> Vsp;
+typedef std::weak_ptr<Vertex> Vwp;
 Graph::Graph()
 {
+    
+}
+Graph::Graph(std::vector<std::vector<int>> &p)
+{
+    for(int i=0;i<p.size();i++)
+    {
+        addEdge(new Vertex(p[i][0]),new Vertex(p[i][1]));
+    }
 }
 Graph::~Graph()
 {
+
 }
 
-Graph::Graph(std::vector<std::vector<int>> &p)
+void Graph::addEdge(V *vstart,V* vend)
 {
-    int len = p.size();
-    for(int i = 0;i<len;i++)
+    Vsp start(vstart);
+    Vsp end(vend);
+    addVertex(start);
+    addVertex(end);
+    start->addRelation(end->key());
+    end->addRelation(start->key());
+}
+
+void Graph::addVertex(Vsp &start)
+{
+    Vcontainer::iterator it = std::find(_vs.begin(),_vs.end(),start->key());
+    if(it == _vs.end())
     {
-        Edge e(new Vertex(p[i][0]),new Vertex(p[i][1]));
-        addEdge(e);
+        _vs.insert({start->key(),start});
     }
 }
 
-
-
-void Graph::addEdge(Edge& e)
+void Graph::print()
 {
-    addVertex(e.start(),e.end());
-}
-
-void Graph::addVertex(Vsp &start,
-    Vsp &end)
-{
-    
-    Vsp vspTmp(start);
-    Vsp tmp = _list[start->key()];
-        if(tmp == NULL)
-        {
-            vspTmp->next(vspTmp);
-            _list[start->key()]=end;            
-        }else{
-            _list[start->key()]->next(end);
-        }
-}
-
-
-size_t  Graph::size() const
-{
-    return _list.size();
+    for(Vcontainer::iterator it = _vs.begin(); it != _vs.end();it++)
+    {
+        it->second->print();
+    }
 }
 

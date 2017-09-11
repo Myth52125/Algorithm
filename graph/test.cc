@@ -23,8 +23,7 @@ int main()
         {7,8},
         {8,9}
     };
-   Graph g(i);
-    
-    printf("graph size : %d \n", g.size());
+    Graph g(i);
+    g.print();
     
 }
