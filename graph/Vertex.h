@@ -2,25 +2,29 @@
 #define _VERTEX_H_M_
 
 #include <string>
+#include <memory>
 using namespace std;
 
 class Vertex
 {
 public:
-    typedef std::weak_ptr<Vertex> Vwp;
-    typedef std::shared_ptr<Vertex> Vsp;
     
     explicit Vertex(int key, string value = "")
         :_key(key),_value(value)
-        {}
-
+        {
+            printf("Vertex cst \n");
+        }
+    ~Vertex()
+    {
+        printf("Vertex des \n");        
+    }
 private:
     int _key;
     string _value;
-    Vwp _next;
+    std::weak_ptr<Vertex> _next;
     
 public:
-    Vwp &next()
+    std::weak_ptr<Vertex> &next()
     {
         return _next;
     }
@@ -28,11 +32,11 @@ public:
     {
         return _key;
     }
-    int value()
+    string value()
     {
         return _value;
     }
-    void value(Vsp v)
+    void next(std::shared_ptr<Vertex>  v)
     {
         _next = v;
     }

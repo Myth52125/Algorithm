@@ -1,33 +1,36 @@
 #ifndef _EDGE_H_M_
 #define _EDGE_H_M_
 
-#include <Vertex.h>
+#include "Vertex.h"
 #include <memory>
-
+#include <stdio.h>
 class Edge
 {
 public:
-    typedef std::shared_ptr<Vertex> Vsp;
-    typedef std::weak_ptr<Vertex> Vwp;
-    
-    Edge(Vsp v1 ,Vsp v2,int weight = 1,bool direction= false)
+   
+    Edge(Vertex *v1 ,Vertex *v2,int weight = 1,bool direction= false)
         :_v1(v1),_v2(v2),
         _weight(weight),_direction(direction)
-        {}
-
+        {
+            printf("Edge cst \n");
+        }
+    ~Edge()
+    {
+        printf("Edge des \n");
+    }
 private:
-    Vwp _v1;
-    Vwp _v2;
+    std::shared_ptr<Vertex> _v1;
+    std::shared_ptr<Vertex> _v2;
     int _weight;
     bool _direction;
 
 public:
-    Vwp &start()
+    std::shared_ptr<Vertex> &start()
     {
         return _v1;
     }
 
-    Vwp &end()
+    std::shared_ptr<Vertex> &end()
     {
         return _v2;
     }
