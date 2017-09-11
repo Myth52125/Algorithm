@@ -6,14 +6,14 @@
 #include "Graph.h"
 #include "Edge.h"
 #include <map>
-
+using namespace std;
 class Graph
 {
 public:
     typedef std::map<int ,shared_ptr<Vertex>> VertexList;
     
     Graph();
-    Graph(std::vector<std::vector<int>> &);    
+    Graph(vector<vector<int>> &);    
     ~Graph();
 private:
     VertexList _list;

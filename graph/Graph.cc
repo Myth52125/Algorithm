@@ -9,12 +9,12 @@ Graph::~Graph()
 {
 }
 
-Graph(std::vector<std::vector<int> > &p)
+Graph::Graph(vector<vector<int>> &p)
 {
-    int len = pair.size();
+    int len = p.size();
     for(int i = 0;i<len;i++)
     {
-        Edge e(new Vertex(pair[i][0]),new Vertex(pair[i][1]));
+        Edge e(new Vertex(p[i][0]),new Vertex(p[i][1]));
         addEdge(e);
     }
 }
