@@ -17,9 +17,9 @@ private:
 public:
     void addRelation(int key,int w=1);
     int key();
-    int relation(size_t index);
+    Vrelation &relation();
     void print();
-
+    
 };
 
 

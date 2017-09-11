@@ -24,6 +24,8 @@ public:
     size_t size()  const;
     void addVertex(Vsp &v);
     void print();
+    size_t dfs(int start,int end);
+    size_t hfs(int start,int end);
 };
 
 

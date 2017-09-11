@@ -2,6 +2,7 @@
 #include <iostream>
 #include <stdio.h>
 #include <iterator>
+typedef std::map<int,int> Vrelation;
 
 Vertex::Vertex(int key)
     :_key(key)
@@ -29,4 +30,9 @@ void Vertex::print()
     }
     printf("\n");
     
+}
+
+Vrelation &Vertex::relation()
+{
+    return _relationList;
 }

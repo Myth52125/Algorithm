@@ -2,8 +2,12 @@
 #include <algorithm>
 #include <stdio.h>
 #include <iterator>
+#include <set>
+#include <stack>
+
 typedef std::shared_ptr<Vertex> Vsp;
 typedef std::weak_ptr<Vertex> Vwp;
+typedef std::map<int,int> Vrelation;
 Graph::Graph()
 {
     
@@ -47,3 +51,30 @@ void Graph::print()
     }
 }
 
+
+
+size_t Graph::dfs(int start,int end)
+{
+    std::set<int> passed;
+    std::stack<int> st; 
+
+    do
+    {
+        for(Vcontainer::iterator it = _vs.begin();it != _vs.end();it ++)
+        {
+            int tmpG = it->first;
+            st.push(tmpG);
+            int tmp = st.top();
+            st.pop();
+            Vrelation tmpVR = _vs[tmp]->relation();
+            for(Vrelation::iterator itV = tmpVR.begin();itV != tmpVR.end(); itV ++)
+            {
+                
+            }
+
+        }
+    }while(st.empty())
+
+
+
+}
