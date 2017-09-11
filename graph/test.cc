@@ -4,27 +4,11 @@
 
 #include <stdio.h>
 #include <vector>
-using namespace std;
+
 
 int main()
 {
-
-    // int i[10][2]  = {
-    //     {1,2},
-    //     {1,3},
-    //     {1,4},
-    //     {2,5},
-    //     {5,6},
-    //     {3,6},
-    //     {6,7},
-    //     {6,8},
-    //     {7,9},
-    //     {8,9}
-    // };
-
-    
-
-    vector<vector<int>> i{
+    std::vector<std::vector<int>> i{
         {1,2},
         {1,3},
         {1,4},

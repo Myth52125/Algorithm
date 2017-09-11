@@ -6,11 +6,12 @@
 #include "Graph.h"
 #include "Edge.h"
 #include <map>
-using namespace std;
 class Graph
 {
 public:
     typedef std::map<int ,shared_ptr<Vertex>> VertexList;
+    typedef std::shared_ptr<Vertex> Vsp;
+    typedef std::weak_ptr<Vertex> Vwp;
     
     Graph();
     Graph(vector<vector<int>> &);    
@@ -18,11 +19,11 @@ public:
 private:
     VertexList _list;
     
-    void addVertex(std::shared_ptr<Vertex> &start,
-        std::shared_ptr<Vertex> &end);
+    void addVertex(Vsp &start,Vsp &end);
 public:
     void addEdge(Edge& e);
     size_t size()  const;
+    
 };
 
 

@@ -9,6 +9,8 @@ using namespace std;
 class Vertex
 {
 public:
+    typedef std::shared_ptr<Vertex> Vsp;
+    typedef std::weak_ptr<Vertex> Vwp;
     
     explicit Vertex(int key, string value = "")
         :_key(key),_value(value),_next()
@@ -20,10 +22,10 @@ public:
 private:
     int _key;
     string _value;
-    std::weak_ptr<Vertex> _next;
+    Vwp _next;
     
 public:
-    std::weak_ptr<Vertex> &next()
+    Vwp &next()
     {
         return _next;
     }
@@ -36,23 +38,26 @@ public:
         return _value;
     }
 
-    void next(std::shared_ptr<Vertex>  &v)
+    void next(Vsp  &v)
     {
-        
-
         if(_next.lock())
         {
-            std::weak_ptr<Vertex> tmp(_next);
-
+            Vwp tmp(_next);
             while(tmp.lock())
             {
-                tmp = tmp.lock()->next();
+                if(tmp.lock()->key() != v->key())
+                {
+                    tmp = tmp.lock()->next();
+                }else{
+                    return;
+                }
             }
             tmp = v;
         }else{
             _next = v;
         }
     }
+
     
 };
 

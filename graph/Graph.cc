@@ -9,7 +9,7 @@ Graph::~Graph()
 {
 }
 
-Graph::Graph(vector<vector<int>> &p)
+Graph::Graph(std::vector<std::vector<int>> &p)
 {
     int len = p.size();
     for(int i = 0;i<len;i++)
@@ -26,12 +26,12 @@ void Graph::addEdge(Edge& e)
     addVertex(e.start(),e.end());
 }
 
-void Graph::addVertex(std::shared_ptr<Vertex> &start,
-    std::shared_ptr<Vertex> &end)
+void Graph::addVertex(Vsp &start,
+    Vsp &end)
 {
     
-    std::shared_ptr<Vertex> vspTmp(start);
-    std::shared_ptr<Vertex> tmp = _list[start->key()];
+    Vsp vspTmp(start);
+    Vsp tmp = _list[start->key()];
         if(tmp == NULL)
         {
             vspTmp->next(vspTmp);
