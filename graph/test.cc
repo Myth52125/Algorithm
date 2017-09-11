@@ -1,5 +1,4 @@
 #include "Vertex.h"
-#include "Edge.h"
 #include "Graph.h"
 
 #include <stdio.h>

@@ -22,9 +22,11 @@ int Vertex::key()
 
 void Vertex::print()
 {
-    printf("%d :",_key);
+    printf("%d (size %d):",_key,_relationList.size());
     for(Vrelation::iterator it = _relationList.begin();it != _relationList.end();it++)
     {
          printf("->%d ",it->first);
     }
+    printf("\n");
+    
 }

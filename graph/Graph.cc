@@ -26,13 +26,13 @@ void Graph::addEdge(V *vstart,V* vend)
     Vsp end(vend);
     addVertex(start);
     addVertex(end);
-    start->addRelation(end->key());
-    end->addRelation(start->key());
+    _vs[start->key()]->addRelation(end->key());
+    _vs[end->key()]->addRelation(start->key());
 }
 
 void Graph::addVertex(Vsp &start)
 {
-    Vcontainer::iterator it = std::find(_vs.begin(),_vs.end(),start->key());
+    Vcontainer::iterator it = _vs.find(start->key());
     if(it == _vs.end())
     {
         _vs.insert({start->key(),start});
