@@ -1,15 +1,19 @@
-#include <Graph.h>
+#include "Graph.h"
 #include <algorithm>
+#include <stdio.h>
 
 Graph::Graph()
-    {}
+    {
+        printf("Graph cst \n");
+        
+    }
 
 
 void Graph::addEdge(const Edge& e)
 {
-    if(e.start().lock() && e.end().lock())
+    if(e->start().lock() && e->end().lock())
     {
-        addEdge(e.start().lock(),e.end().lock())
+        addEdge(e->start().lock(),e->end().lock())
     }
 }
 
