@@ -56,25 +56,57 @@ void Graph::print()
 size_t Graph::dfs(int start,int end)
 {
     std::set<int> passed;
-    std::stack<int> st; 
+    std::stack<int> st;
+    int steps{0};
+    bool pushed{false};
+    std::map<int,int> father;
 
+    st.push(start);
+    passed.insert(start);
     do
     {
-        for(Vcontainer::iterator it = _vs.begin();it != _vs.end();it ++)
-        {
-            int tmpG = it->first;
-            st.push(tmpG);
             int tmp = st.top();
+            //处理该节点
+            if(tmp == end)
+            {
+                return 1;
+                break;
+            }
+            //处理完毕
             st.pop();
+            steps--;
             Vrelation tmpVR = _vs[tmp]->relation();
             for(Vrelation::iterator itV = tmpVR.begin();itV != tmpVR.end(); itV ++)
             {
-                
+               int tmpV = itV->first;
+            
+               if(passed.find(tmpV) == passed.end())
+               {
+                     father[tmpV]=tmp;
+                    st.push(tmpV);
+                    passed.insert(tmpV);
+                    pushed = true;
+               } 
             }
 
-        }
-    }while(st.empty())
+          //  printf("set size : %dpath \n",st.size());
+            
+    }while(!st.empty());
 
+    // std::vector<int> path;
+    // path.push_back(end);
 
+    // for (int i = end ; i != start;i=father[i])
+    // {
+    //     path.push_back(father[i]);    
+    // }
+    // printf("path:");
 
+    // for(int i = path.size()-1;i>=0;i--)
+    // {   
+    //     printf(" %d ",path[i]);
+    // }
+    // printf("\n");
+    
+    return -1;
 }

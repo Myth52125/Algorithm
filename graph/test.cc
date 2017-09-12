@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 #include <vector>
-
+#include <iostream>
 
 int main()
 {
@@ -24,5 +24,9 @@ int main()
     };
     Graph g(i);
     g.print();
-    
+
+    int i1;
+    int i2;
+std::cin>>i1>>i2;
+    printf("steps : %d \n",g.dfs(i1,i2))  ;
 }
