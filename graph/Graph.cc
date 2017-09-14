@@ -24,14 +24,18 @@ Graph::~Graph()
 
 }
 
-void Graph::addEdge(V *vstart,V* vend)
+void Graph::addEdge(V *vstart,V* vend,bool direction , int weight )
 {
     Vsp start(vstart);
     Vsp end(vend);
     addVertex(start);
     addVertex(end);
     _vs[start->key()]->addRelation(end->key());
-    _vs[end->key()]->addRelation(start->key());
+    if(!direction)
+    {
+        _vs[end->key()]->addRelation(start->key(),weight);
+    }
+    
 }
 
 void Graph::addVertex(Vsp &start)
@@ -69,6 +73,7 @@ size_t Graph::dfs(int start,int end)
             //处理该节点
             if(tmp == end)
             {
+                printPath(father,start,end);
                 return 1;
                 break;
             }
@@ -93,20 +98,25 @@ size_t Graph::dfs(int start,int end)
             
     }while(!st.empty());
 
-    // std::vector<int> path;
-    // path.push_back(end);
 
-    // for (int i = end ; i != start;i=father[i])
-    // {
-    //     path.push_back(father[i]);    
-    // }
-    // printf("path:");
-
-    // for(int i = path.size()-1;i>=0;i--)
-    // {   
-    //     printf(" %d ",path[i]);
-    // }
-    // printf("\n");
     
     return -1;
+}
+
+void Graph::printPath(std::map<int,int> father,int start,int end)
+{
+    std::vector<int> path;
+    path.push_back(end);
+
+    for (int i = end ; i != start;i=father[i])
+    {
+        path.push_back(father[i]);    
+    }
+    printf("path:");
+
+    for(int i = path.size()-1;i>=0;i--)
+    {   
+        printf(" %d ",path[i]);
+    }
+    printf("\n");
 }
