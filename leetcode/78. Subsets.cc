@@ -16,7 +16,7 @@ void subsets(vector<vector<int>> &result,vector<int> &temp,vector<int> &resource
     {
         cout<<"tmpstart: "<<tmpStart<<" start: "<<start<<" now : "<<resource[start]<<" passed : "<<((resource[start]==resource[start-1] && start > 0)?" true ":" false ")<<endl;
         //额外限制
-        if(resource[start]==resource[start-1] && start > 0)
+        if(resource[start]==resource[start-1] && start > 0 )
         {
             continue;
         }
