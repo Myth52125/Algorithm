@@ -18,9 +18,9 @@ public:
     ~Graph();
 private:
     Vcontainer _vs;
-    void addVertex(V &start,V &end);
+    void printPath(std::map<int,int> father,int start,int end);
 public:
-    void addEdge(V *vstart,V* vend);
+    void addEdge(V *vstart,V* vend ,bool direction = false,int weight = 1);
     size_t size()  const;
     void addVertex(Vsp &v);
     void print();
