@@ -7,7 +7,7 @@
 
 typedef std::shared_ptr<Vertex> Vsp;
 typedef std::weak_ptr<Vertex> Vwp;
-typedef std::map<int,int> Vrelation;
+typedef std::map<int,int> Vout;
 Graph::Graph()
 {
     
@@ -30,10 +30,14 @@ void Graph::addEdge(V *vstart,V* vend,bool direction , int weight )
     Vsp end(vend);
     addVertex(start);
     addVertex(end);
-    _vs[start->key()]->addRelation(end->key());
     if(!direction)
     {
-        _vs[end->key()]->addRelation(start->key(),weight);
+        _vs[start->key()]->addOut(end->key());
+        _vs[end->key()]->addOut(start->key(),weight);
+    }else{
+        _vs[start->key()]->addOut(end->key());
+        _vs[end->key()]->addOut(start->key(),weight);
+        
     }
     
 }
@@ -80,8 +84,8 @@ size_t Graph::dfs(int start,int end)
             //处理完毕
             st.pop();
             steps--;
-            Vrelation tmpVR = _vs[tmp]->relation();
-            for(Vrelation::iterator itV = tmpVR.begin();itV != tmpVR.end(); itV ++)
+            Vout tmpVR = _vs[tmp]->out();
+            for(Vout::iterator itV = tmpVR.begin();itV != tmpVR.end(); itV ++)
             {
                int tmpV = itV->first;
             

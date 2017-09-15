@@ -20,7 +20,7 @@ void backtracking(vector<vector<int>> &result,vector<int> &temp,int total,int tm
         //将当前处理的节点添加入temp
         temp.push_back(start);
         //这里不一定是k-1。
-        backtracking(result,temp,total,tmpStart+1,k-1);
+        backtracking(result,temp,total,start+1,k-1);
 
         //只要执行到这一句，意味着递归到达最底层，开始返回。
         //需要需要将底层push的元素pop出

@@ -12,12 +12,15 @@ public:
     Vertex(int key);
 private:
     int _key;
-    Vrelation _relationList;
+    Vrelation _out;
+    Vrelation _in;
     
 public:
-    void addRelation(int key,int w=1);
+    void addOut(int key,int w=1);
+    void addIn(int key,int w=1);
     int key();
-    Vrelation &relation();
+    Vrelation &out();
+    Vrelation &in();
     void print();
     
 };

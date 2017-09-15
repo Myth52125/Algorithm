@@ -1,4 +1,4 @@
-void backtracking(vector<vector<int>> &result,vector<int> &temp,int k)
+void backtracking(vector<vector<int>> &result,vector<int> &temp,int tmpStartb)
 {
     //当递归到了最低层，需要返回的两个出点
     //第一个出点(可以没有)：该出点表示当前容器的结果不满足要求。直接返回
@@ -18,7 +18,7 @@ void backtracking(vector<vector<int>> &result,vector<int> &temp,int k)
     for()
     {
         //添加额外的限制条件
-        if()
+        if(int start = tmpStart;...)
         {
             //使用continue跳过
             continue;
@@ -27,7 +27,7 @@ void backtracking(vector<vector<int>> &result,vector<int> &temp,int k)
         //将当前处理的节点添加入temp
         temp.push_back(...);
         //这里不一定是k-1。
-        backtracking(result,temp,k-1);
+        backtracking(result,temp,start+1);
 
         //只要执行到这一句，意味着递归到达最底层，开始返回。
         //需要需要将底层push的元素pop出

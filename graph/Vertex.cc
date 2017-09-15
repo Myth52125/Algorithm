@@ -11,9 +11,14 @@ Vertex::Vertex(int key)
     }
 
 
-void Vertex::addRelation(int key ,int w)
+void Vertex::addOut(int key ,int w)
 {
-    _relationList.insert({key,w});
+    _out.insert({key,w});
+}
+
+void Vertex::addIn(int key ,int w)
+{
+    _in.insert({key,w});
 }
 
 int Vertex::key()
@@ -23,8 +28,8 @@ int Vertex::key()
 
 void Vertex::print()
 {
-    printf("%d (size %d):",_key,_relationList.size());
-    for(Vrelation::iterator it = _relationList.begin();it != _relationList.end();it++)
+    printf("%d (size %d):",_key,_out.size());
+    for(Vrelation::iterator it = _out.begin();it != _out.end();it++)
     {
          printf("->%d ",it->first);
     }
@@ -32,7 +37,12 @@ void Vertex::print()
     
 }
 
-Vrelation &Vertex::relation()
+Vrelation &Vertex::out()
 {
-    return _relationList;
+    return _out;
+}
+
+Vrelation &Vertex::in()
+{
+    return _in;
 }
