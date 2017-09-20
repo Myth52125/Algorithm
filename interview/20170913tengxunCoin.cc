@@ -141,5 +141,5 @@ int main()
 {
     int remain;
     cin >> remain;
-    coinPacking(remain);
+    coin2Packing(remain);
 }
