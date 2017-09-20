@@ -1,6 +1,7 @@
 #include <iostream>
 #include <algorithm>
 #include <vector>
+#include <unistd.h>
 using namespace std;
 
 int findK1(int k,vector<int> &source)
@@ -52,29 +53,39 @@ int findk22(int k,vector<int> &source)
     }
 }
 
-
+int quicksortPartition(int start,int end,vector<int> &source)
+{
+    int x = source[end];
+    int i = start;
+    for(int j=start;j<end;j++)
+    {
+        if(source[j]<x)
+        {
+            swap(source[i],source[j]);
+            i++;
+        }
+    }
+    swap(source[i],source[end]);
+    return i;
+}
 void quicksort(int start,int end,vector<int> &source)
 {
-    if(start == end)
+    if(start >= end)
     {
         return;
     }
-    int nextStart = start;
-    int nextEnd = end;
-    int tmp = start-1;
-    cout<<start<<" "<<end<<endl;
-    while(start != end)
+    int i=quicksortPartition(start,end,source);
+
+    cout<<endl;
+    for(auto i:source)
     {
-        if(source[start] < source[end] && tmp >= start)
-        {
-            swap(source[start],source[tmp]);
-            tmp++;
-        }
-        start++;
+        cout<<i<<" ";
     }
-    swap(source[end],source[tmp]);
-    quicksort(0,tmp,source);
-    quicksort(tmp,nextEnd,source);
+    cout<<endl;
+    sleep(1);
+    quicksort(start,i-1,source);
+
+    quicksort(i+1,end,source);
 }
 
 
@@ -86,12 +97,14 @@ int findk3(int k,vector<int> &source)
 
 int main()
 {
-    vector<int> a{2,4,6,8,56,3,2,76,8,4,2,3,7,8,9,4,1};
-    quicksort(0,a.size(),a);
+    vector<int> a{2,4,6,8,5,3,2,6,8,4,2,3,7,8,9,4,1};
+    quicksort(0,a.size()-1,a);
 
+    cout<<endl;
     for(auto i:a)
     {
         cout<<i<<"";
     }
-
+    cout<<endl;
+    
 }
