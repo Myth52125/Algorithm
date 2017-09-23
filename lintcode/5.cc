@@ -15,7 +15,7 @@ void print(vector<int> &source)
 }
 
 //先排序，后查找
-int findK1(int k,vector<int> &source)
+int findk1(int k,vector<int> &source)
 {
     if(k>source.size())
     {
@@ -29,7 +29,7 @@ int findK1(int k,vector<int> &source)
 
 
 //冒泡和选择排序
-int findK21(int k,vector<int> &source)
+int findk21(int k,vector<int> &source)
 {
     if(k>source.size())
     {
@@ -225,13 +225,13 @@ int findk5(int k,vector<int> &source)
 
 int main()
 {
-    vector<int> a{2,4,6,8,5,3,2,6,8,4,2,3,7,8,9,4,1};
+    vector<int> a{1,2,3,4,5,6,8,9,10,7};
     print(a);
     int k;
     while(cin>>k)
     {
 
-        cout<<findk5(k,a)<<endl;;
+        cout<<findk1(k,a)<<endl;;
         // print(a);
         // cout<<findk22(k,a)<<endl;
     }
