@@ -50,7 +50,7 @@ class Graph
     void ksaraju_dfs(int curKey,vector<bool> &memo,vector<int> &scc,vector<Node  >& vContainer);    
     void ksaraju_calOrder(vector<Node > &vContainer,vector<int> &order);
     Graph ksaraju_reverse(vector<Node  > &oldG,vector<Node > &newG);
-    void Tarjan_dfs(int n,int &reachTime,vector<int> &reach,vector<int> &low,vector<bool> &flag,stack<int> &st);
+    void Tarjan_dfs(int n,int &reachTime,vector<int> &reach,vector<int> &low,vector<bool> &flag,stack<int> &st,vector<int> &scc,vector<vector<int>> &result);
     
   public:
     int findBfs(int start, int end);
@@ -68,6 +68,4 @@ class Graph
     void add(int,int);
     void vertex();
     vector<Node> vList();
-    
-    
 };

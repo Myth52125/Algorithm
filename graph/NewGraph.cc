@@ -356,29 +356,39 @@ vector<vector<int>> Graph::ksaraju()
 }
 
 //Tarjan_dfs的深度优先搜索
-void Graph::Tarjan_dfs(int curKey, int &reachTime, vector<int> &reach, vector<int> &low, vector<bool> &flag, stack<int> &st)
+void Graph::Tarjan_dfs(int curKey, int &reachTime, vector<int> &reach, 
+    vector<int> &low, vector<bool> &flag, stack<int> &st,vector<int> &scc,vector<vector<int>> &result)
 {
     int childKey;
     //设置正在处理节点的reach和low
-    reach[curKey] = reachTime++;
-    low[curKey] = reachTime++;
-    flag[childKey] = true;
+    low[curKey]=reach[curKey] = reachTime++;
+    
+    flag[curKey] = true;
     //压入栈
     st.push(curKey);
     //处理其子节点
+    cout<<"cur:child: "<<curKey<<" "<<reach[curKey] <<" "<< low[curKey]<<endl;
+    
+
     shared_ptr<Node> curNode(new Node(vContainer[curKey]));
+
     while (curNode->to != NULL)
     {
         childKey = curNode->to->key;
         //如果该节点已经处理过了
-        if (reach[childKey] != 0)
+        if (reach[childKey] != 0 && flag[childKey])
         {
-            low[curKey] == reach[childKey];
+            low[curKey] =reach[childKey];
+
+            //  cout<<"cur : reach :"<<curKey<<" "
+            //     <<reach[curKey]<<" "<<low[curKey]<<endl;
         }
-        else
+        else if(reach[childKey] == 0)
         {
+        cout<<"child: "<<childKey<<" "<<(flag[childKey]) <<" "<< reach[childKey]<<endl;
+            
             //处理还没被处理的节点
-            Tarjan_dfs(curNode->to->key, reachTime, reach, low, flag, st);
+            Tarjan_dfs(childKey, reachTime, reach, low, flag, st,scc,result);
             //递归返回的时候判断，low是否等于reach
             if (low[childKey] < low[curKey])
             {
@@ -386,6 +396,22 @@ void Graph::Tarjan_dfs(int curKey, int &reachTime, vector<int> &reach, vector<in
             }
         }
         curNode = curNode->to;
+    }
+    
+    int tmp;
+    if(low[curKey] == reach[curKey])
+    {
+        do
+        {
+            tmp = st.top();
+            st.pop();
+            scc.push_back(tmp);
+            flag[curKey] = false;
+        }while(curKey != tmp);
+
+        result.push_back(scc);
+        scc.erase(scc.begin(),scc.end());
+        
     }
 }
 
@@ -396,28 +422,29 @@ vector<vector<int>> Graph::Tarjan()
     vector<int> low(len, 0);
     vector<bool> flag(len, false);
     stack<int> st;
+    vector<int> scc;
+    vector<vector<int>> result;
     int reachTime = 1;
     for (Node n : vContainer)
     {
-        Tarjan_dfs(n.key, reachTime, reach, low, flag, st);
+        if(n.key !=-1 && reach[n.key] == 0)
+        {
+          Tarjan_dfs(n.key, reachTime, reach, low, flag, st,scc,result);
+        }
     }
 
-    int curKey;
-    vector<int> tmp;
-    vector<vector<int>> result;
-    do
+    for(Node n:vContainer)
     {
-        curKey = st.top();
-        st.pop();
-
-        tmp.push_back(curKey);
-        if (low[curKey] = reach[curKey])
+        if(n.key!=-1)
         {
-            result.push_back(tmp);
-            tmp.erase(tmp.begin(), tmp.end());
+            cout<<"key: "<<n.key<<" reach: "<<reach[n.key]
+                <<" low: "<<low[n.key]<<endl;
         }
-    } while (!st.empty());
+    }
 
+
+    cout<<"Tarjan: ";
+    print2(result);
     return result;
 }
 

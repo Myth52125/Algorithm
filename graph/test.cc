@@ -43,6 +43,11 @@ int main()
     g.ksaraju();
     cout << endl<< "----------ksaraju_dfs----------" <<endl;
     
+    cout << endl<< "----------Tarjan----------" <<endl;
+    g.Tarjan();
+    cout << endl<< "----------Tarjan----------" <<endl;
+    
+    
     
     
     cout << endl << "----------end  ----------" << endl << endl;
