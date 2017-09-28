@@ -1,6 +1,38 @@
 #include "NewGraph.h"
 #include <iostream>
 #include <algorithm>
+
+template <typename T>
+void printMemo(vector<T> memo)
+{
+    cout << endl;
+    for (T i : memo)
+    {
+        cout << i << " ";
+    }
+    cout << endl;
+}
+
+void printTime(vector<Node> &Vlist)
+{
+    for(Node i:Vlist)
+    {
+        cout<<"key: "<<i.key<<" reach: "<<i.reach<<" leave: "<<i.leave<<endl;
+    }
+}
+
+void print2(vector<vector<int>> v)
+{
+    for(auto i:v)
+    {
+        cout<<endl;
+        for(auto j:i)
+        {
+            cout<<j<<" ";
+        }
+    }
+}
+
 int Graph::findBfs(int start, int end)
 {
     deque<int> de;
@@ -30,17 +62,21 @@ int Graph::findBfs(int start, int end)
         de.pop_front();
 
         //节点处理完毕以后，将节点指向的节点以此添加到队列中
-        tmp = make_shared<Node>(new Node(vContainer[curKey]));
+        Node *n1 = new Node(vContainer[curKey]);
+        tmp.reset(new Node(vContainer[curKey]));
+        // cout<<"share_ptr key: "<<curKey<<" "<<(n1->to->key)<<endl;
         //当前节点有指向别的节点
         while (tmp->to != NULL)
         {
             //当前指向的节点还没有遍历过
             if (memo[tmp->to->key] == false)
             {
-                tmp->to->d = tmp->d + 1;
+                vContainer[tmp->to->key].d = vContainer[tmp->key].d + 1;
+                vContainer[tmp->to->key].p = tmp->key + 1;
                 tmp->to->p = tmp->key;
                 memo[tmp->to->key] = true;
                 de.push_back(tmp->to->key);
+                cout << " de back: " << de.back() << endl;
             }
             //指向当前节点，指向的下一个节点
             tmp = tmp->to;
@@ -56,11 +92,11 @@ void Graph::dfs_re_func(int curKey, vector<bool> &memo)
     //如果想要尽早尽快结束遍历，需要额外的变量：引用或者指针
     //这里使用：finded
     //处理该节点,同时设置结束表示
-    cout << curKey << endl;
+    cout << curKey << " ";
 
     //标记为处理结束
-    memo[curKey] = true;
 
+    memo[curKey] = true;
     //处理结束，将遍历该节点指向的节点
     shared_ptr<Node> tmp(new Node(vContainer[curKey]));
 
@@ -69,8 +105,8 @@ void Graph::dfs_re_func(int curKey, vector<bool> &memo)
     {
         if (memo[tmp->to->key] == false)
         {
-            tmp->to->d = tmp->d + 1;
-            tmp->to->p = tmp->key;
+            vContainer[tmp->to->key].d = vContainer[tmp->to->key].d + 1;
+            vContainer[tmp->to->key].p = vContainer[tmp->to->key].key;
             dfs_re_func(tmp->to->key, memo);
             //节点返回代表该极点的子节点都处理完毕了。
 
@@ -84,28 +120,35 @@ void Graph::dfs_re_func(int curKey, vector<bool> &memo)
 
 int Graph::dfs_re()
 {
-    vector<bool> memo;
+    vector<bool> memo(vContainer.size() + 1, false);
     //对于有向图，可能存在多个不能到达的点，所以需要依次遍历：
     for (Node i : vContainer)
     {
-        dfs_re_func(i.key, memo);
+        if (i.key != -1 && memo[i.key] == false)
+        {
+            dfs_re_func(i.key, memo);
+        }
     }
 }
 
 void Graph::dfsTopo_func(int curKey, vector<int> &result, vector<bool> &memo)
 {
-
     memo[curKey] = true;
+    
     shared_ptr<Node> tmp(new Node(vContainer[curKey]));
     while (tmp->to != NULL)
     {
-        curKey = tmp->to->key;
-        if (memo[curKey] == false)
+    
+        if (memo[tmp->to->key] == false)
         {
-            dfsTopo_func(curKey, result, memo);
+            // cout<<"curKey: "<<curKey<<endl;
+    
+            dfsTopo_func(tmp->to->key, result, memo);
             //当该递归返回时，表示该节点处理完了，
             //并且该节点所有的自己点，以及指向的子节点也都处理完了
-            result.push_back(curKey);
+            // cout<<"push: "<<tmp->to->key<<endl;
+    
+            result.push_back(tmp->to->key);
         }
         tmp = tmp->to;
     }
@@ -114,51 +157,70 @@ void Graph::dfsTopo_func(int curKey, vector<int> &result, vector<bool> &memo)
 vector<int> Graph::dfsTopo()
 {
     vector<int> result;
-    vector<bool> memo;
+    vector<bool> memo(vContainer.size() + 1, false);
 
     for (Node i : vContainer)
     {
-        dfsTopo_func(i.key, result, memo);
+        // cout<<"i.key: "<<i.key<<endl;
+        if (i.key != -1 && memo[i.key] == false)
+        {
+            dfsTopo_func(i.key, result, memo);
+            result.push_back(i.key);
+        }
     }
     reverse(result.begin(), result.end());
+    printMemo(result);
     return result;
 }
 
-void Graph::kahnTopolgical_sort()
+vector<int> Graph::kahnTopolgical_sort()
 {
     vector<int> result;                         //存放最终结果
     deque<int> de;                              //存放入度为0的节点
-    vector<int> indegree(vContainer.size(), 0); //存放节点的入度
+    vector<int> indegree(vContainer.size()+1, 0); //存放节点的入度
 
     //计算所有节点的入度
     shared_ptr<Node> tmp;
     for (Node i : vContainer)
     {
-        tmp = make_shared<Node>(new Node(i));
-        while (tmp->to != NULL)
+        if(i.key != -1)
         {
-            indegree[tmp->to->key]++;
-            tmp = tmp->to;
-        }
-    }
-    //将入度为0的节点放入de中
-    for (int i = 0; i < indegree.size(); i++)
-    {
-        if (0 == indegree[i])
-        {
-            de.push_back(i);
+            tmp = make_shared<Node>(Node(i));
+            while (tmp->to != NULL)
+            {
+                indegree[tmp->to->key]++;
+                tmp = tmp->to;
+            }
         }
     }
 
+    //将入度为0的节点放入de中
+    for (int i = 0; i < indegree.size(); i++)
+    {
+        if(vContainer[i].key != -1)
+        {
+            if (0 == indegree[i])
+            {
+                de.push_back(i);
+            }
+        }
+    }
+    cout<<"indegree: "<<indegree.size()<<"  "<<vContainer.size()+1;
+    printMemo(indegree);
+    
+
     int curKey;
     shared_ptr<Node> curNode;
+
+
     //每次从de中取元素，然后遍历其指向的元素
     //并将指向节点的入度--，如果为0,也放入de。
     while (!de.empty())
     {
         curKey = de.front();
         de.pop_front();
-        curNode = make_shared<Node>(new Node(vContainer[curKey]));
+        result.push_back(curKey);
+        curNode = make_shared<Node>(Node(vContainer[curKey]));
         while (curNode->to != NULL)
         {
             curNode = curNode->to;
@@ -170,62 +232,78 @@ void Graph::kahnTopolgical_sort()
             }
         }
     }
+    cout<<"result: ";
+    printMemo(result);
 }
 
 void Graph::dfs(int curKey, int &time, vector<bool> &memo)
 {
 
     memo[curKey] = true;
-    shared_ptr<Node> tmp = make_shared<Node>(new Node(vContainer[curKey]));
+    shared_ptr<Node> tmp(new Node(vContainer[curKey]));
+    vContainer[tmp->key].reach = ++time;
     while (tmp->to != NULL)
     {
         tmp = tmp->to;
-        curKey = tmp->key;
-        if (memo[curKey] == false)
+        if (memo[tmp->key] == false)
         {
-            tmp->reach = ++time;
-            dfs(curKey, time, memo);
-            tmp->leave = ++time;
+            dfs(tmp->key, time, memo);
         }
-        tmp = tmp->to;
     }
+    vContainer[curKey].leave = ++time;
 }
 
 void Graph::ksaraju_dfs(int curKey, vector<bool> &memo, vector<int> &scc, vector<Node> &vContainer)
 {
     memo[curKey] = true;
+
     shared_ptr<Node> tmp(new Node(vContainer[curKey]));
+    scc.push_back(curKey);
+    
     while (tmp->to != NULL)
     {
         tmp = tmp->to;
         curKey = tmp->key;
         if (memo[curKey] == false)
         {
-            scc.push_back(curKey);
             ksaraju_dfs(curKey, memo, scc, vContainer);
         }
-        tmp = tmp->to;
     }
 }
 
 void Graph::ksaraju_calOrder(vector<Node> &vContainer, vector<int> &order)
 {
-    int total = (vContainer.size() + 1) * 2;
-    for (int i = total; total > 0; i--)
+    int total = (vContainer.size()-1) * 2;
+    for (int i = total; i > 0; i--)
     {
         for (Node node : vContainer)
         {
-            if (node.leave == total)
+            if (node.leave == i)
             {
                 order.push_back(node.key);
-                continue;
+                break;
             }
         }
     }
 }
-void Graph::ksaraju_reverse(vector<Node> &oldG, vector<Node> &newG)
+Graph Graph::ksaraju_reverse(vector<Node> &oldG, vector<Node> &newG)
 {
-    //...
+    Graph g;
+    for(Node i:oldG)
+    {
+        if(i.key != -1)
+        {
+            shared_ptr<Node> tmp(new Node(i));
+            while(tmp->to != NULL)
+            {
+                tmp=tmp->to;
+                g.add(tmp->key,i.key);
+            }
+        }
+    }
+    newG=g.vList();
+    g.vertex();
+    return g;
 }
 
 vector<vector<int>> Graph::ksaraju()
@@ -233,19 +311,27 @@ vector<vector<int>> Graph::ksaraju()
 
     //深度优先搜索。
     int time = 0;
-    vector<bool> memo(vContainer.size(), false);
+    vector<bool> memo(vContainer.size()+1, false);
     for (Node i : vContainer)
     {
-        if (memo[i.key] == false)
+        if(i.key != -1)
         {
-            dfs(i.key, time, memo);
+            if (memo[i.key] == false)
+            {
+                dfs(i.key, time, memo);
+            }
         }
     }
-
+    cout<<"print time"<<endl;
+    printTime(vContainer);
+    
+    
     //获取反向图遍历节点的顺序
     vector<int> order;
     ksaraju_calOrder(vContainer, order);
 
+    cout<<"older :";
+    printMemo(order);
     //构造反向图
     vector<Node> reverseGraph;
     ksaraju_reverse(vContainer, reverseGraph);
@@ -258,11 +344,14 @@ vector<vector<int>> Graph::ksaraju()
         if (memo[curKey] == false)
         {
             vector<int> scc;
+
             ksaraju_dfs(curKey, memo, scc, reverseGraph);
             //这里添加的是副本
             result.push_back(scc);
         }
     }
+    cout<<"ksaraju: ";
+    print2(result);
     return result;
 }
 
@@ -328,36 +417,90 @@ vector<vector<int>> Graph::Tarjan()
             tmp.erase(tmp.begin(), tmp.end());
         }
     } while (!st.empty());
+
     return result;
 }
 
+
+
 void Graph::add(vector<int> &v)
 {
-    vContainer.resize(v[0]+1);
-
-    cout<<"vContainer size(): "<<vContainer.size()<<" "<<v[0]<<endl;
-    if (vContainer[v[0]].key == -1)
-    {
-        Node n(v[0]);
-        vContainer[v[0]] = n;
-    }
-    vContainer[v[0]].add(v[1]);
+    add(v[0],v[1]);
+    // cout<<"graph::add :"<<v[0]<<" "<<vContainer[v[0]].key<<endl;
 }
 
 void Graph::add(vector<vector<int>> &vs)
 {
-    for(auto i:vs)
+    for (auto i : vs)
     {
         add(i);
     }
 }
+void Graph::add(int v1,int v2)
+{
+    if (vContainer.size() < v1+ 1 || vContainer.size()< v2 +1)
+    {
+        vContainer.resize(max(v1,v2)+ 1);
+    }
+
+    vContainer[v1].key = v1;
+    vContainer[v2].key = v2;
+
+    vContainer[v1].add(v2);
+}
+
+
 
 void Node::add(int next)
 {
-    shared_ptr<Node> tmp = to;
-    while (tmp != NULL)
+    // cout<<"Node::add : "<<next<<endl;
+    // printNode(this);
+
+    shared_ptr<Node> *tmp = &to;
+    // printNode(to);
+
+    // cout<<"Node::add to: "<<(to==NULL)<<endl;
+    if ((*tmp) != NULL)
     {
-        tmp = tmp->to;
+        while ((*tmp)->to != NULL)
+        {
+            // cout<<"tmp key: "<<(*tmp)->key<<" to: "<<(*tmp)<<endl;
+            *tmp = (*tmp)->to;
+        }
+        (*tmp)->to.reset(new Node(next));
     }
-    tmp= make_shared<Node>(new Node(next));
+    else
+    {
+        (*tmp).reset(new Node(next));
+    }
+
+    // printNode(this);
+
+    // tmp=make_shared<Node>(Node(next));
+    // cout<<"Node::add : "<<to->key<<endl;
 }
+
+void Graph::vertex()
+{
+    cout<<"all vertex: "<<endl;
+    for(Node i : vContainer)
+    {
+        if(i.key != -1)
+        {
+            cout << "node " << i.key << " : ";
+            shared_ptr<Node> tmp = i.to;
+            while (tmp != NULL)
+            {
+                cout << tmp->key << " ";
+                tmp = tmp->to;
+            }
+            cout << endl;
+        }
+    }
+}
+
+vector<Node> Graph::vList()
+{
+    return vContainer;
+}
+

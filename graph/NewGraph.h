@@ -2,6 +2,7 @@
 #include <deque>
 #include <stack>
 #include <memory>
+#include <iostream>
 using namespace std;
 
 struct Node
@@ -13,8 +14,13 @@ struct Node
     Node(int i)
       :key(i)
     {
-      
     }
+    Node(const Node &node)
+      :key(node.key),to(node.to),d(node.d),p(node.p),
+      reach(node.reach),leave(node.leave)
+      {
+
+      }
     void add(int );
 
 
@@ -43,7 +49,7 @@ class Graph
     void dfsTopo_func(int curKey, vector<int> &result ,vector<bool> &memo );
     void ksaraju_dfs(int curKey,vector<bool> &memo,vector<int> &scc,vector<Node  >& vContainer);    
     void ksaraju_calOrder(vector<Node > &vContainer,vector<int> &order);
-    void ksaraju_reverse(vector<Node  > &oldG,vector<Node > &newG);
+    Graph ksaraju_reverse(vector<Node  > &oldG,vector<Node > &newG);
     void Tarjan_dfs(int n,int &reachTime,vector<int> &reach,vector<int> &low,vector<bool> &flag,stack<int> &st);
     
   public:
@@ -52,13 +58,16 @@ class Graph
 
     int dfs_re();
     vector<int> dfsTopo();
-    void kahnTopolgical_sort();
+    vector<int>  kahnTopolgical_sort();
     void dfs(int curKey, int &time ,vector<bool> &memo);
     vector<vector<int>> ksaraju();
     vector<vector<int>> Tarjan();
 
     void add(vector<int> &);
     void add(vector<vector<int>> &);
+    void add(int,int);
+    void vertex();
+    vector<Node> vList();
     
     
 };
