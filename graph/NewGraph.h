@@ -43,6 +43,7 @@ struct Node
     int weight=1;
     //为最大流算法添加的已用日嗯亮
     int used=0;
+    int usedTo;
 };
 
 struct HeapSort
@@ -76,6 +77,7 @@ class Graph
     void dijkstra_smallheap_build(int start, vector<HeapSort> &heap);
     void dijkstra_smallheap_add(vector<HeapSort> &smallheap, vector<HeapSort> &added);
     HeapSort dijkstra_smallheap_take(vector<HeapSort> &smallheap);
+    bool edmonds_dfs(int start, int end, int &pathMin, vector<vector<int>> &passedNode, vector<bool> memo);
     
   public:
     int findBfs(int start, int end);
@@ -97,5 +99,7 @@ class Graph
 
     int nonLoopShortest_dfs(int start,int end);
     int dijkstra(int start,int end);
+    
+    int edmonds(int start, int end);
     
 };

@@ -47,6 +47,11 @@ int main()
     cout << endl<< "----------Tarjan----------" <<endl;
     g.Tarjan();
     cout << endl<< "----------Tarjan----------" <<endl;
+
+    cout << endl<< "----------dijkstra----------" <<endl;
+    g.dijkstra(1,2);
+    cout << endl<< "----------dijkstra----------" <<endl;
+    
     
     cout << endl << "----------end  ----------" << endl << endl;
 }
