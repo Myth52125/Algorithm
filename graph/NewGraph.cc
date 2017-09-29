@@ -444,9 +444,14 @@ vector<vector<int>> Graph::Tarjan()
 
 void Graph::add(vector<int> &v)
 {
-    add(v[0], v[1]);
-    // cout<<"graph::add :"<<v[0]<<" "<<vContainer[v[0]].key<<endl;
+    if(v.size()==2)
+    {
+        add(v[0], v[1]);
+    }else if(v.size()==3){
+        add(v[0],v[1],v[2]);
+    }
 }
+
 
 void Graph::add(vector<vector<int>> &vs)
 {
@@ -466,6 +471,34 @@ void Graph::add(int v1, int v2)
     vContainer[v2].key = v2;
 
     vContainer[v1].add(v2);
+}
+void Graph::add(int v1,int v2,int weight)
+{
+    if (vContainer.size() < v1 + 1 || vContainer.size() < v2 + 1)
+    {
+        vContainer.resize(max(v1, v2) + 1);
+    }
+
+    vContainer[v1].key = v1;
+    vContainer[v2].key = v2;
+
+    vContainer[v1].add(v2,weight);
+}
+void Node::add(int next,int weight)
+{
+    shared_ptr<Node> *tmp = &to;
+    if ((*tmp) != NULL)
+    {
+        while ((*tmp)->to != NULL)
+        {
+            *tmp = (*tmp)->to;
+        }
+        (*tmp)->to.reset(new Node(next,weight));
+    }
+    else
+    {
+        (*tmp).reset(new Node(next,weight));
+    }
 }
 
 void Node::add(int next)
@@ -524,7 +557,7 @@ vector<Node> Graph::vList()
 int Graph::nonLoopShortest_dfs(int start, int end)
 {
     deque<int> de;
-    de.push_push(start);
+    de.push_back(start);
     vContainer[start].d = 0;
     vContainer[start].p = 0;
 
@@ -537,7 +570,7 @@ int Graph::nonLoopShortest_dfs(int start, int end)
     //可以先计算入度，然后在每次遍历到end节点的时候入度--。为0的时候可以返回。
 
     int endIndegree;
-    while (!de.empty)
+    while (!de.empty())
     {
         curKey = de.front();
         de.pop_front();
@@ -564,11 +597,7 @@ int Graph::nonLoopShortest_dfs(int start, int end)
     return vContainer[end].d;
 }
 
-struct HeapSort
-{
-    int k;
-    int v;
-}
+
 
 //建堆用的递归函数
 void Graph::dijkstra_smallheap_build(int start, vector<HeapSort> &heap)
@@ -576,11 +605,11 @@ void Graph::dijkstra_smallheap_build(int start, vector<HeapSort> &heap)
     int l = start * 2;
     int r = start * 2 + 1;
     int index = start;
-    if (l < heap.size() && heap[index] > heap[l])
+    if (l < heap.size() && heap[index].k > heap[l].k)
     {
         index = l;
     }
-    if (r < heap.size() && heap[index] > heap[r])
+    if (r < heap.size() && heap[index].k > heap[r].k)
     {
         index = r;
     }
@@ -618,7 +647,10 @@ int Graph::dijkstra(int start,int end)
 {
     vector<HeapSort> smallheap;
     vector<HeapSort> added;
-    dijkstra_smallheap_add(HeapSort(0,start));
+
+    HeapSort tmp(0,start);
+    added.push_back(tmp);
+    dijkstra_smallheap_add(smallheap,added);
 
     shared_ptr<Node> curNode;
     int tmpDis;
@@ -626,14 +658,14 @@ int Graph::dijkstra(int start,int end)
     {
         HeapSort cur=dijkstra_smallheap_take(smallheap);
         
-        curNode = make_shared<Node>(new Node(vContainer[cur.v]);
-        added.resize(0);
+        curNode = make_shared<Node>(Node(vContainer[cur.v]));
+        added.erase(added.begin(),added.end());
         while(curNode->to != NULL)
         {
             tmpDis = vContainer[cur.v].d+curNode->to->weight;
-            if(tmpDis <  vContainer[urNode->to->key].d)
+            if(tmpDis <  vContainer[curNode->to->key].d)
             {
-                vContainer[urNode->to->key].d=tmpDis;
+                vContainer[curNode->to->key].d=tmpDis;
                 added.push_back(HeapSort(tmpDis,curNode->to->key));
             }
             curNode=curNode->to;
