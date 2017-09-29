@@ -531,3 +531,30 @@ vector<Node> Graph::vList()
     return vContainer;
 }
 
+
+int Graph::nonLoopShortest_dfs(int start,int end)
+{
+    deque<int> de;
+    de.push_push(start);
+    vContainer[start].d=0;
+    vContainer[start].p=0;
+    
+    shared_ptr<Node> childNode;
+    shared_ptr<Node> curNode;
+    int curKey;
+    int childKey;
+    while(!de.empty)
+    {
+        curKey = de.front();
+        de.pop_front();
+
+        curNode.reset(new Node(vContainer[curKey]));
+        while(curNode->to != NULL)
+        {
+            childKey = curNode->to->key;
+            vContainer[childKey].d= 
+                vContainer[start].d+vContainer[childKey].weight;
+
+        }
+    }
+}

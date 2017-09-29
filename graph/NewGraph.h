@@ -32,6 +32,8 @@ struct Node
     //为深度优先搜索记录的发现时间和处理结束时间
     int reach;
     int leave;
+    //父节点到该节点的权重
+    int weight;
 };
 
 class Graph
@@ -68,4 +70,6 @@ class Graph
     void add(int,int);
     void vertex();
     vector<Node> vList();
+
+    int nonLoopShortest_dfs(int start,int end);
 };
