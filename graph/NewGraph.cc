@@ -15,20 +15,20 @@ void printMemo(vector<T> memo)
 
 void printTime(vector<Node> &Vlist)
 {
-    for(Node i:Vlist)
+    for (Node i : Vlist)
     {
-        cout<<"key: "<<i.key<<" reach: "<<i.reach<<" leave: "<<i.leave<<endl;
+        cout << "key: " << i.key << " reach: " << i.reach << " leave: " << i.leave << endl;
     }
 }
 
 void print2(vector<vector<int>> v)
 {
-    for(auto i:v)
+    for (auto i : v)
     {
-        cout<<endl;
-        for(auto j:i)
+        cout << endl;
+        for (auto j : i)
         {
-            cout<<j<<" ";
+            cout << j << " ";
         }
     }
 }
@@ -134,20 +134,20 @@ int Graph::dfs_re()
 void Graph::dfsTopo_func(int curKey, vector<int> &result, vector<bool> &memo)
 {
     memo[curKey] = true;
-    
+
     shared_ptr<Node> tmp(new Node(vContainer[curKey]));
     while (tmp->to != NULL)
     {
-    
+
         if (memo[tmp->to->key] == false)
         {
             // cout<<"curKey: "<<curKey<<endl;
-    
+
             dfsTopo_func(tmp->to->key, result, memo);
             //当该递归返回时，表示该节点处理完了，
             //并且该节点所有的自己点，以及指向的子节点也都处理完了
             // cout<<"push: "<<tmp->to->key<<endl;
-    
+
             result.push_back(tmp->to->key);
         }
         tmp = tmp->to;
@@ -175,15 +175,15 @@ vector<int> Graph::dfsTopo()
 
 vector<int> Graph::kahnTopolgical_sort()
 {
-    vector<int> result;                         //存放最终结果
-    deque<int> de;                              //存放入度为0的节点
-    vector<int> indegree(vContainer.size()+1, 0); //存放节点的入度
+    vector<int> result;                             //存放最终结果
+    deque<int> de;                                  //存放入度为0的节点
+    vector<int> indegree(vContainer.size() + 1, 0); //存放节点的入度
 
     //计算所有节点的入度
     shared_ptr<Node> tmp;
     for (Node i : vContainer)
     {
-        if(i.key != -1)
+        if (i.key != -1)
         {
             tmp = make_shared<Node>(Node(i));
             while (tmp->to != NULL)
@@ -197,7 +197,7 @@ vector<int> Graph::kahnTopolgical_sort()
     //将入度为0的节点放入de中
     for (int i = 0; i < indegree.size(); i++)
     {
-        if(vContainer[i].key != -1)
+        if (vContainer[i].key != -1)
         {
             if (0 == indegree[i])
             {
@@ -205,13 +205,11 @@ vector<int> Graph::kahnTopolgical_sort()
             }
         }
     }
-    cout<<"indegree: "<<indegree.size()<<"  "<<vContainer.size()+1;
+    cout << "indegree: " << indegree.size() << "  " << vContainer.size() + 1;
     printMemo(indegree);
-    
 
     int curKey;
     shared_ptr<Node> curNode;
-
 
     //每次从de中取元素，然后遍历其指向的元素
     //并将指向节点的入度--，如果为0,也放入de。
@@ -232,7 +230,7 @@ vector<int> Graph::kahnTopolgical_sort()
             }
         }
     }
-    cout<<"result: ";
+    cout << "result: ";
     printMemo(result);
 }
 
@@ -259,7 +257,7 @@ void Graph::ksaraju_dfs(int curKey, vector<bool> &memo, vector<int> &scc, vector
 
     shared_ptr<Node> tmp(new Node(vContainer[curKey]));
     scc.push_back(curKey);
-    
+
     while (tmp->to != NULL)
     {
         tmp = tmp->to;
@@ -273,7 +271,7 @@ void Graph::ksaraju_dfs(int curKey, vector<bool> &memo, vector<int> &scc, vector
 
 void Graph::ksaraju_calOrder(vector<Node> &vContainer, vector<int> &order)
 {
-    int total = (vContainer.size()-1) * 2;
+    int total = (vContainer.size() - 1) * 2;
     for (int i = total; i > 0; i--)
     {
         for (Node node : vContainer)
@@ -289,19 +287,19 @@ void Graph::ksaraju_calOrder(vector<Node> &vContainer, vector<int> &order)
 Graph Graph::ksaraju_reverse(vector<Node> &oldG, vector<Node> &newG)
 {
     Graph g;
-    for(Node i:oldG)
+    for (Node i : oldG)
     {
-        if(i.key != -1)
+        if (i.key != -1)
         {
             shared_ptr<Node> tmp(new Node(i));
-            while(tmp->to != NULL)
+            while (tmp->to != NULL)
             {
-                tmp=tmp->to;
-                g.add(tmp->key,i.key);
+                tmp = tmp->to;
+                g.add(tmp->key, i.key);
             }
         }
     }
-    newG=g.vList();
+    newG = g.vList();
     g.vertex();
     return g;
 }
@@ -311,10 +309,10 @@ vector<vector<int>> Graph::ksaraju()
 
     //深度优先搜索。
     int time = 0;
-    vector<bool> memo(vContainer.size()+1, false);
+    vector<bool> memo(vContainer.size() + 1, false);
     for (Node i : vContainer)
     {
-        if(i.key != -1)
+        if (i.key != -1)
         {
             if (memo[i.key] == false)
             {
@@ -322,15 +320,14 @@ vector<vector<int>> Graph::ksaraju()
             }
         }
     }
-    cout<<"print time"<<endl;
+    cout << "print time" << endl;
     printTime(vContainer);
-    
-    
+
     //获取反向图遍历节点的顺序
     vector<int> order;
     ksaraju_calOrder(vContainer, order);
 
-    cout<<"older :";
+    cout << "older :";
     printMemo(order);
     //构造反向图
     vector<Node> reverseGraph;
@@ -350,25 +347,24 @@ vector<vector<int>> Graph::ksaraju()
             result.push_back(scc);
         }
     }
-    cout<<"ksaraju: ";
+    cout << "ksaraju: ";
     print2(result);
     return result;
 }
 
 //Tarjan_dfs的深度优先搜索
-void Graph::Tarjan_dfs(int curKey, int &reachTime, vector<int> &reach, 
-    vector<int> &low, vector<bool> &flag, stack<int> &st,vector<int> &scc,vector<vector<int>> &result)
+void Graph::Tarjan_dfs(int curKey, int &reachTime, vector<int> &reach,
+                       vector<int> &low, vector<bool> &flag, stack<int> &st, vector<int> &scc, vector<vector<int>> &result)
 {
     int childKey;
     //设置正在处理节点的reach和low
-    low[curKey]=reach[curKey] = reachTime++;
-    
+    low[curKey] = reach[curKey] = reachTime++;
+
     flag[curKey] = true;
     //压入栈
     st.push(curKey);
     //处理其子节点
-    cout<<"cur:child: "<<curKey<<" "<<reach[curKey] <<" "<< low[curKey]<<endl;
-    
+    cout << "cur:child: " << curKey << " " << reach[curKey] << " " << low[curKey] << endl;
 
     shared_ptr<Node> curNode(new Node(vContainer[curKey]));
 
@@ -378,17 +374,17 @@ void Graph::Tarjan_dfs(int curKey, int &reachTime, vector<int> &reach,
         //如果该节点已经处理过了
         if (reach[childKey] != 0 && flag[childKey])
         {
-            low[curKey] =reach[childKey];
+            low[curKey] = reach[childKey];
 
             //  cout<<"cur : reach :"<<curKey<<" "
             //     <<reach[curKey]<<" "<<low[curKey]<<endl;
         }
-        else if(reach[childKey] == 0)
+        else if (reach[childKey] == 0)
         {
-        cout<<"child: "<<childKey<<" "<<(flag[childKey]) <<" "<< reach[childKey]<<endl;
-            
+            cout << "child: " << childKey << " " << (flag[childKey]) << " " << reach[childKey] << endl;
+
             //处理还没被处理的节点
-            Tarjan_dfs(childKey, reachTime, reach, low, flag, st,scc,result);
+            Tarjan_dfs(childKey, reachTime, reach, low, flag, st, scc, result);
             //递归返回的时候判断，low是否等于reach
             if (low[childKey] < low[curKey])
             {
@@ -397,9 +393,9 @@ void Graph::Tarjan_dfs(int curKey, int &reachTime, vector<int> &reach,
         }
         curNode = curNode->to;
     }
-    
+
     int tmp;
-    if(low[curKey] == reach[curKey])
+    if (low[curKey] == reach[curKey])
     {
         do
         {
@@ -407,11 +403,10 @@ void Graph::Tarjan_dfs(int curKey, int &reachTime, vector<int> &reach,
             st.pop();
             scc.push_back(tmp);
             flag[curKey] = false;
-        }while(curKey != tmp);
+        } while (curKey != tmp);
 
         result.push_back(scc);
-        scc.erase(scc.begin(),scc.end());
-        
+        scc.erase(scc.begin(), scc.end());
     }
 }
 
@@ -427,32 +422,29 @@ vector<vector<int>> Graph::Tarjan()
     int reachTime = 1;
     for (Node n : vContainer)
     {
-        if(n.key !=-1 && reach[n.key] == 0)
+        if (n.key != -1 && reach[n.key] == 0)
         {
-          Tarjan_dfs(n.key, reachTime, reach, low, flag, st,scc,result);
+            Tarjan_dfs(n.key, reachTime, reach, low, flag, st, scc, result);
         }
     }
 
-    for(Node n:vContainer)
+    for (Node n : vContainer)
     {
-        if(n.key!=-1)
+        if (n.key != -1)
         {
-            cout<<"key: "<<n.key<<" reach: "<<reach[n.key]
-                <<" low: "<<low[n.key]<<endl;
+            cout << "key: " << n.key << " reach: " << reach[n.key]
+                 << " low: " << low[n.key] << endl;
         }
     }
 
-
-    cout<<"Tarjan: ";
+    cout << "Tarjan: ";
     print2(result);
     return result;
 }
 
-
-
 void Graph::add(vector<int> &v)
 {
-    add(v[0],v[1]);
+    add(v[0], v[1]);
     // cout<<"graph::add :"<<v[0]<<" "<<vContainer[v[0]].key<<endl;
 }
 
@@ -463,11 +455,11 @@ void Graph::add(vector<vector<int>> &vs)
         add(i);
     }
 }
-void Graph::add(int v1,int v2)
+void Graph::add(int v1, int v2)
 {
-    if (vContainer.size() < v1+ 1 || vContainer.size()< v2 +1)
+    if (vContainer.size() < v1 + 1 || vContainer.size() < v2 + 1)
     {
-        vContainer.resize(max(v1,v2)+ 1);
+        vContainer.resize(max(v1, v2) + 1);
     }
 
     vContainer[v1].key = v1;
@@ -475,8 +467,6 @@ void Graph::add(int v1,int v2)
 
     vContainer[v1].add(v2);
 }
-
-
 
 void Node::add(int next)
 {
@@ -509,10 +499,10 @@ void Node::add(int next)
 
 void Graph::vertex()
 {
-    cout<<"all vertex: "<<endl;
-    for(Node i : vContainer)
+    cout << "all vertex: " << endl;
+    for (Node i : vContainer)
     {
-        if(i.key != -1)
+        if (i.key != -1)
         {
             cout << "node " << i.key << " : ";
             shared_ptr<Node> tmp = i.to;
@@ -531,30 +521,127 @@ vector<Node> Graph::vList()
     return vContainer;
 }
 
-
-int Graph::nonLoopShortest_dfs(int start,int end)
+int Graph::nonLoopShortest_dfs(int start, int end)
 {
     deque<int> de;
     de.push_push(start);
-    vContainer[start].d=0;
-    vContainer[start].p=0;
-    
+    vContainer[start].d = 0;
+    vContainer[start].p = 0;
+
     shared_ptr<Node> childNode;
     shared_ptr<Node> curNode;
     int curKey;
     int childKey;
-    while(!de.empty)
+    int tmpDis;
+
+    //可以先计算入度，然后在每次遍历到end节点的时候入度--。为0的时候可以返回。
+
+    int endIndegree;
+    while (!de.empty)
     {
         curKey = de.front();
         de.pop_front();
+        //
+        //这里可以处理endIndegree
+        //
 
         curNode.reset(new Node(vContainer[curKey]));
-        while(curNode->to != NULL)
+        while (curNode->to != NULL)
         {
             childKey = curNode->to->key;
-            vContainer[childKey].d= 
-                vContainer[start].d+vContainer[childKey].weight;
-
+            tmpDis = vContainer[start].d + vContainer[childKey].weight;
+            //如果该条路径到达子节点的路径短，那么需要松弛操作，同时重新计算子节点后面的节点。
+            if (vContainer[childKey].d > tmpDis)
+            {
+                vContainer[childKey].d = tmpDis;
+                vContainer[childKey].p = start;
+                de.push_back(childKey);
+            }
+            curNode = curNode->to;
         }
     }
+    //最后才能返回d的值。因为无法判断有机条路径能够到达d;
+    return vContainer[end].d;
 }
+
+struct HeapSort
+{
+    int k;
+    int v;
+}
+
+//建堆用的递归函数
+void Graph::dijkstra_smallheap_build(int start, vector<HeapSort> &heap)
+{
+    int l = start * 2;
+    int r = start * 2 + 1;
+    int index = start;
+    if (l < heap.size() && heap[index] > heap[l])
+    {
+        index = l;
+    }
+    if (r < heap.size() && heap[index] > heap[r])
+    {
+        index = r;
+    }
+    if (index != start)
+    {
+        swap(heap[start], heap[index]);
+        dijkstra_smallheap_build(index, heap);
+    }
+}
+
+//想堆中添加元素
+void Graph::dijkstra_smallheap_add(vector<HeapSort> &smallheap, vector<HeapSort> &added)
+{
+    smallheap.insert(smallheap.end(),added.begin(),added.end());
+
+    for(int i=smallheap.size()/2+1;i>0;i--)
+    {
+        dijkstra_smallheap_build(i,smallheap);
+    }
+
+}
+//取出堆顶元素
+HeapSort Graph::dijkstra_smallheap_take(vector<HeapSort> &smallheap)
+{
+
+    HeapSort ret= smallheap[1];
+    smallheap[1]=smallheap.back();
+    smallheap.pop_back();
+    dijkstra_smallheap_build(1,smallheap);
+    return ret;
+}
+
+//主要算法
+int Graph::dijkstra(int start,int end)
+{
+    vector<HeapSort> smallheap;
+    vector<HeapSort> added;
+    dijkstra_smallheap_add(HeapSort(0,start));
+
+    shared_ptr<Node> curNode;
+    int tmpDis;
+    while(!smallheap.empty())
+    {
+        HeapSort cur=dijkstra_smallheap_take(smallheap);
+        
+        curNode = make_shared<Node>(new Node(vContainer[cur.v]);
+        added.resize(0);
+        while(curNode->to != NULL)
+        {
+            tmpDis = vContainer[cur.v].d+curNode->to->weight;
+            if(tmpDis <  vContainer[urNode->to->key].d)
+            {
+                vContainer[urNode->to->key].d=tmpDis;
+                added.push_back(HeapSort(tmpDis,curNode->to->key));
+            }
+            curNode=curNode->to;
+        }
+        dijkstra_smallheap_add(smallheap,added);
+    }
+
+    return vContainer[end].d;
+}
+
+
