@@ -34,7 +34,7 @@ struct Node
     int key=-1;
     shared_ptr<Node> to=NULL;
     //为广度优先搜索添加的，距离，父节点
-    int d=INT32_MAX;
+    int d=INT16_MAX;
     int p=0;
     //为深度优先搜索记录的发现时间和处理结束时间
     int reach=0;
@@ -43,7 +43,7 @@ struct Node
     int weight=1;
     //为最大流算法添加的已用日嗯亮
     int used=0;
-    int usedTo;
+    shared_ptr<Node> usedTo=NULL;
 };
 
 struct HeapSort

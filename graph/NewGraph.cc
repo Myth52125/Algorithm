@@ -62,7 +62,6 @@ int Graph::findBfs(int start, int end)
         de.pop_front();
 
         //节点处理完毕以后，将节点指向的节点以此添加到队列中
-        Node *n1 = new Node(vContainer[curKey]);
         tmp.reset(new Node(vContainer[curKey]));
         // cout<<"share_ptr key: "<<curKey<<" "<<(n1->to->key)<<endl;
         //当前节点有指向别的节点
@@ -232,6 +231,7 @@ vector<int> Graph::kahnTopolgical_sort()
     }
     cout << "result: ";
     printMemo(result);
+    return result;
 }
 
 void Graph::dfs(int curKey, int &time, vector<bool> &memo)
@@ -617,11 +617,24 @@ void Graph::dijkstra_smallheap_build(int start, vector<HeapSort> &heap)
         swap(heap[start], heap[index]);
         dijkstra_smallheap_build(index, heap);
     }
+    cout << "heap  :" << endl;
+    for (auto i : heap)
+    {
+        cout << "weight: " << i.k << " key: " << i.v << endl;
+    }
+    cout << endl;
 }
 
 //想堆中添加元素
 void Graph::dijkstra_smallheap_add(vector<HeapSort> &smallheap, vector<HeapSort> &added)
 {
+    // cout<<"heap add  : "<<endl;
+    // for(auto i : added)
+    // {
+    //     cout<<"weight: "<<i.k<<" key: "<<i.v<<endl;
+    // }
+    // cout<<endl;
+
     smallheap.insert(smallheap.end(), added.begin(), added.end());
 
     for (int i = smallheap.size() / 2 + 1; i > 0; i--)
@@ -637,6 +650,7 @@ HeapSort Graph::dijkstra_smallheap_take(vector<HeapSort> &smallheap)
     smallheap[1] = smallheap.back();
     smallheap.pop_back();
     dijkstra_smallheap_build(1, smallheap);
+    // cout<<"now min : "<<ret.v<<endl;
     return ret;
 }
 
@@ -645,14 +659,15 @@ int Graph::dijkstra(int start, int end)
 {
     vector<HeapSort> smallheap;
     vector<HeapSort> added;
-
+    smallheap.push_back(HeapSort(-1, -1));
+    vContainer[start].d = 0;
     HeapSort tmp(0, start);
     added.push_back(tmp);
     dijkstra_smallheap_add(smallheap, added);
 
     shared_ptr<Node> curNode;
     int tmpDis;
-    while (!smallheap.empty())
+    while (smallheap.size() > 1)
     {
         HeapSort cur = dijkstra_smallheap_take(smallheap);
 
@@ -661,6 +676,7 @@ int Graph::dijkstra(int start, int end)
         while (curNode->to != NULL)
         {
             tmpDis = vContainer[cur.v].d + curNode->to->weight;
+            // cout<<"tmpDis : d "<<tmpDis<<" "<<vContainer[curNode->to->key].d<<endl;
             if (tmpDis < vContainer[curNode->to->key].d)
             {
                 vContainer[curNode->to->key].d = tmpDis;
@@ -670,15 +686,24 @@ int Graph::dijkstra(int start, int end)
         }
         dijkstra_smallheap_add(smallheap, added);
     }
-
+    cout << "min size: " << vContainer[end].d << endl;
     return vContainer[end].d;
 }
 
 bool Graph::edmonds_dfs(int start, int end, int &pathMin, vector<vector<int>> &passedNode, vector<bool> memo)
 {
+    cout<<"pathMin : "<<pathMin<<endl;
+
+    if(pathMin == -1)
+    {
+        return true;
+    }
+
     shared_ptr<Node> curNode(new Node(vContainer[start]));
+
     memo[start] = true;
-    if (start = end)
+    
+    if (start == end)
     {
         for (vector<int> v : passedNode)
         {
@@ -691,47 +716,34 @@ bool Graph::edmonds_dfs(int start, int end, int &pathMin, vector<vector<int>> &p
                 vContainer[v[0]].used - pathMin;
             }
         }
+        passedNode.erase(passedNode.begin(),passedNode.end());
+        pathMin = -1;
         return true;
     }
-    while (curNode->to != NULL)
+    cout<<"while : "<<(curNode->to != NULL || (vContainer[curNode->key].weight !=
+        vContainer[curNode->key].used))<<endl;
+
+    while ()
     {
-        if (vContainer[curNode->to->key].weight >
-                vContainer[curNode->to->key].used &&
-            memo[curNode->to->key] == false)
-        {
-            if (pathMin > (vContainer[curNode->to->key].weight -
-                           vContainer[curNode->to->key].used))
-            {
-                pathMin = vContainer[curNode->to->key].weight - vContainer[curNode->to->key].used;
-            }
-                passedNode.push_back(vector<int>(curNode -> to->key,1));
-                vContainer[curNode -> to->key].usedTo=start;
-                edmonds_dfs(curNode -> to->key,end,pathMin,passedNode,memo);
-        }
-        else if (vContainer[curNode->to->key].used > 0 && memo[vContainer[curNode->to->key].usedTo] == false)
-        {
-            if(pathMin > vContainer[curNode -> to->key].used)
-            {
-                pathMin = vContainer[curNode -> to->key].weight - vContainer[curNode -> to->key].used;
-            }
-
-                pathMin = vContainer[curNode->to->key].used;
-                passedNode.push_back(vector<int>(curNode -> to->key,0));
-                edmonds_dfs(vContainer[curNode -> to->key].usedTo,end,pathMin,passedNode,memo);
-        }
-        curNode=curNode->to;
+        //啊。。。不想写
     }
-    return false;
-}
 
+    if(pathMin == -1)
+    {
+        return true;
+    }else{
+        return false;
+    }
+}
 
 int Graph::edmonds(int start, int end)
 {
     int pathMin = INT32_MAX;
     vector<vector<int>> passedNode;
     vector<bool> memo(vContainer.size() + 1, false);
-    while(edmonds_dfs(start,end,pathMin,passedNode,memo))
+    while (edmonds_dfs(start, end, pathMin, passedNode, memo))
     {
+    pathMin=INT32_MAX;
     }
     return vContainer[start].used;
 }

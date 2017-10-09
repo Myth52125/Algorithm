@@ -48,9 +48,31 @@ int main()
     g.Tarjan();
     cout << endl<< "----------Tarjan----------" <<endl;
 
+
+    Graph minpath;
+    vector<vector<int>> vw{
+        {1,2,3},{2,3,6},{3,5,2},{5,3,7},{5,1,3},{2,4,2},{4,2,1},{4,3,4},{1,4,5}
+    };
+    minpath.add(vw);
+    minpath.vertex();
+
     cout << endl<< "----------dijkstra----------" <<endl;
-    g.dijkstra(1,2);
+    minpath.dijkstra(2,5);
     cout << endl<< "----------dijkstra----------" <<endl;
+
+
+    Graph water;
+    vector<vector<int>> wt{
+        {1,2,16},{1,3,13},{2,3,10},{3,2,4},{2,4,12},{3,5,14},{4,3,9},{5,4,7},{4,6,20},{5,6,4}
+    };
+    water.add(wt);
+    water.vertex();
+
+    cout << endl<< "----------edmonds----------" <<endl;
+    water.edmonds(1,6);
+    cout << endl<< "----------edmonds----------" <<endl;
+    
+    
     
     
     cout << endl << "----------end  ----------" << endl << endl;
