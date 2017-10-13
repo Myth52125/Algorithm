@@ -8,3 +8,4 @@ graph/test
 ../linuxcode/psm/mainOrder/b.h.gch
 ../linuxcode/psm/mainOrder/b.h.gch
 graph/test
+*.out
